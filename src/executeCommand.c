@@ -91,10 +91,6 @@ void executeCommand(psCommand_t *command)
                 close(pipeLink[0][0]);               // Close the read end of the first pipe
                 dup2(pipeLink[0][1], STDOUT_FILENO); // Redirect standard output to the write end of the first pipe
                 close(pipeLink[0][1]);               // Close the write end of the first pipe
-                for(int j = 0; j < numberOfChild; j++){
-                    close(pipeLink[j][0]);
-                    close(pipeLink[j][1]);
-                }
             }
             else if (i == numberOfChild - 1)
             {
@@ -103,10 +99,6 @@ void executeCommand(psCommand_t *command)
                 close(pipeLink[i - 1][1]);              // Close the write end of the previous pipe
                 dup2(pipeLink[i - 1][0], STDIN_FILENO); // Redirect standard input to the read end of the previous pipe
                 close(pipeLink[i - 1][0]);              // Close the read end of the previous pipe
-                for(int j = 0; j < numberOfChild; j++){
-                    close(pipeLink[j][0]);
-                    close(pipeLink[j][1]);
-                }
             }
             else
             {
@@ -118,11 +110,12 @@ void executeCommand(psCommand_t *command)
                 close(pipeLink[i][0]);                  // Close the read end of the current pipe
                 dup2(pipeLink[i][1], STDOUT_FILENO);    // Redirect standard output to the write end of the current pipe
                 close(pipeLink[i][1]);                  // Close the write end of the current pipe
-                for(int j = 0; j < numberOfChild; j++){
-                    close(pipeLink[j][0]);
-                    close(pipeLink[j][1]);
-                }
             }
+
+			for(int j = 0; j < numberOfChild; j++){
+					close(pipeLink[j][0]);
+					close(pipeLink[j][1]);
+			}
 
             // Execute the child process command
            
